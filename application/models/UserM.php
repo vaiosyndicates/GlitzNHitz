@@ -79,12 +79,12 @@ class UserM extends CI_Model{
         $response['status']=200;
         $response['error']=true;
         $tokenData = array();
-        $tokenData['id'] = "test123"; //TODO: Replace with data for token
+        $tokenData['email'] = $email; //TODO: Replace with data for token
         $response['message']['token']= AUTHORIZATION::generateToken($tokenData);   
       }else{
           $response['status']=502;
           $response['error']=true;
-          $response['message']='User tidak ditemukan.';
+          $response['message']='Email atau Password salah.';
           return $response;
       }
     return $response;

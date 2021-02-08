@@ -1,6 +1,7 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['jwt_key'] = 'test';
+$config['jwt_key'] = 'Fitra';
 
 /*Generated token will expire in 1 minute for sample code
 * Increase this value as per requirement for production

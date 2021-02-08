@@ -12,13 +12,17 @@ class User extends REST_Controller{
     $headers = $this->input->request_headers();
     if (array_key_exists('Authorization', $headers) && !empty($headers['Authorization'])) {
       $decodedToken = AUTHORIZATION::validateToken($headers['Authorization']);
-        if ($decodedToken != false) {
-          return true;
-        } 
+        if ($decodedToken == false) {
+            $response['status']=502;
+            $response['error']=true;
+            $response['message']='Unauthorised token.';
+            $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
+        }
+    }else if(REST_Controller::HTTP_UNAUTHORIZED == 401){
         $response['status']=502;
         $response['error']=true;
         $response['message']='Unauthorised token.';
-        $this->set_response($response, REST_Controller::HTTP_UNAUTHORIZED);
+        $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
     }
 
   }
@@ -42,16 +46,6 @@ class User extends REST_Controller{
         1
       );
     $this->set_response($response, REST_Controller::HTTP_OK);
-  }
-
-  // function login user method post
-  public function login_post(){
-    $response = $this->UserM->cek_login(
-        $this->post('email'),
-        $this->post('password')
-      );
-
-    $this->set_response($response);
   }
 
   // update data user method put

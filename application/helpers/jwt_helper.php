@@ -60,7 +60,8 @@ class JWT
 				//throw new DomainException('Empty algorithm');
 			}
 			if ($sig != JWT::sign("$headb64.$bodyb64", $key, $header->alg)) {
-				throw new UnexpectedValueException('Signature verification failed');
+				//throw new UnexpectedValueException('Signature verification failed');
+				return false;
 			}
 		}
 		return $payload;
@@ -81,7 +82,6 @@ class JWT
 	public static function encode($payload, $key, $algo = 'HS256')
 	{
 		$header = array('typ' => 'JWT', 'alg' => $algo);
-
 		$segments = array();
 		$segments[] = JWT::urlsafeB64Encode(JWT::jsonEncode($header));
 		$segments[] = JWT::urlsafeB64Encode(JWT::jsonEncode($payload));
@@ -90,7 +90,8 @@ class JWT
 		$signature = JWT::sign($signing_input, $key, $algo);
 		$segments[] = JWT::urlsafeB64Encode($signature);
 
-		return implode('.', $segments);
+		$x = implode('.', $segments);
+		return $x;
 	}
 
 	/**
@@ -127,7 +128,8 @@ class JWT
 	 */
 	public static function jsonDecode($input)
 	{
-		$obj = json_decode($input);
+		$CI =& get_instance();
+		$obj = json_decode($CI->encryption->decrypt($input));
 		if (function_exists('json_last_error') && $errno = json_last_error()) {
 			JWT::_handleJsonError($errno);
 		} else if ($obj === null && $input !== 'null') {
@@ -146,13 +148,14 @@ class JWT
 	 */
 	public static function jsonEncode($input)
 	{
+		$CI =& get_instance();
 		$json = json_encode($input);
 		if (function_exists('json_last_error') && $errno = json_last_error()) {
 			JWT::_handleJsonError($errno);
 		} else if ($json === 'null' && $input !== null) {
 			throw new DomainException('Null result with non-null input');
 		}
-		return $json;
+		return $CI->encryption->encrypt($json);
 	}
 
 	/**

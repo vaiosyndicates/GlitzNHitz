@@ -1,3 +1,4 @@
+
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -324,7 +325,13 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+// Get a hex-encoded representation of the key:
+//$key = bin2hex($this->encryption->create_key(16));
+
+// Put the same value in your config with hex2bin(),
+// so that it is still passed as binary to the library:
+//$config['encryption_key'] = hex2bin(<your hex-encoded key>);
+$config['encryption_key'] = 'Beaie';
 
 /*
 |--------------------------------------------------------------------------
